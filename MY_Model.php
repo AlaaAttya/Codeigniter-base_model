@@ -12,18 +12,22 @@ class MY_Model extends CI_Model {
     private $table_name;
     private $tabel_key = "user_id";
 
+
     function __construct() {
+
         parent::__construct();
         
-
         //set the table from the name of model class name
         $this->table_name = preg_replace('/(my_model|_model)?$/', '', strtolower(get_class($this)));
-        //echo $this->table_name;
-        //SHOW KEYS FROM data WHERE Key_name = 'PRIMARY'
-       
-        $pr = $this->db->query("SHOW KEYS FROM {$this->table_name} WHERE Key_name = 'PRIMARY'")->result_array();
-        var_dump($pr[0]['Column_name']);
-       
+        if($this->table_name!='')
+        {
+            $row = $this->db->query("SHOW KEYS FROM {$this->table_name} WHERE Key_name = 'PRIMARY'")->result();
+            
+            if(!is_null($row))
+            {
+                echo $row[0]->Column_name;
+            }
+        }  
     }
 
     
@@ -65,7 +69,7 @@ class MY_Model extends CI_Model {
 
             return $this->my_get_object_vars($result_object);
         } else
-            return FALSE;
+        return FALSE;
 
     }
 
@@ -88,7 +92,7 @@ class MY_Model extends CI_Model {
 
             return $result_array;
         } else
-            return FALSE;
+        return FALSE;
     }
     
     /**
